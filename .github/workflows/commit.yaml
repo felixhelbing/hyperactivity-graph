@@ -1,0 +1,31 @@
+name: hyperactivity
+on:
+  schedule:
+    - cron: '0 12 * * *'
+    - cron: '0 13 * * *'
+    - cron: '0 14 * * *'
+    - cron: '0 15 * * *'
+    - cron: '0 16 * * *'
+    - cron: '0 17 * * *'
+    - cron: '0 18 * * *'
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+concurrency:
+  group: commit
+  cancel-in-progress: false
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: do the work
+        run: |
+          git config user.name "felixhelbing"
+          git config user.email "hello@felixhelbing.de"
+          git pull --rebase
+          echo "$(date -u '+%Y-%m-%d %H:%M:%S UTC') — shipping" >> log.txt
+          git add log.txt
+          git commit -m "feat: productivity"
+          git push
